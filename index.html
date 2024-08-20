@@ -190,8 +190,13 @@
         var alpha = parseFloat(document.getElementById("alpha").value);
         var testType = document.getElementById("test_type").value;
 
-        var p_combined = (p1 * n1 + p2 * n2) / (n1 + n2);
-        var standardError = Math.sqrt(p_combined * (1 - p_combined) * (1 / n1 + 1 / n2));
+        if (isNaN(alpha) || alpha <= 0 || alpha >= 1) {
+            alert("Please ensure the significance level is a valid number between 0 and 1.");
+            return;
+        }
+
+        var p_combined = ((p1 * n1) + (p2 * n2)) / (n1 + n2);
+        var standardError = Math.sqrt(p_combined * (1 - p_combined) * ((1 / n1) + (1 / n2)));
         var testStatistic = (p1 - p2) / standardError;
 
         var criticalValueLower, criticalValueUpper, pValue;
@@ -262,11 +267,9 @@
 
         var zCritical = jStat.normal.inv(1 - alpha / 2, 0, 1);
 
-        var pooledProportion = (p1 + p2) / 2;
+        var sampleSize = (Math.pow(zCritical, 2) * (p1 * (1 - p1) + p2 * (1 - p2))) / Math.pow(marginError, 2);
 
-        var n = (Math.pow(zCritical, 2) * (2 * pooledProportion * (1 - pooledProportion))) / Math.pow(marginError, 2);
-
-        document.getElementById("sample_size_result").innerHTML = "Required Sample Size per Group: " + Math.ceil(n);
+        document.getElementById("sample_size_result").innerHTML = "Required Sample Size per Group: " + Math.ceil(sampleSize);
     }
 </script>
 
