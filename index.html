@@ -171,10 +171,24 @@
 <section id="confidenceInterval" class="calculator">
     <h2>Confidence Interval Calculator</h2>
     <form id="confidenceIntervalForm">
-        <p>Sample Proportion 1 (\(p_1\)): <input type="text" id="ci_p1" required></p>
-        <p>Sample Size 1 (\(n_1\)): <input type="text" id="ci_n1" required></p>
-        <p>Sample Proportion 2 (\(p_2\)): <input type="text" id="ci_p2" required></p>
-        <p>Sample Size 2 (\(n_2\)): <input type="text" id="ci_n2" required></p>
+        <p>Input Method: 
+            <select id="ciInputMethod" onchange="toggleCIInputFields()">
+                <option value="successes">Number of Successes</option>
+                <option value="proportions">Sample Proportions</option>
+            </select>
+        </p>
+        <div id="ciSuccessesInput">
+            <p>Number of Successes in Sample 1 (\(x_1\)): <input type="text" id="ci_x1" required></p>
+            <p>Sample Size 1 (\(n_1\)): <input type="text" id="ci_n1" required></p>
+            <p>Number of Successes in Sample 2 (\(x_2\)): <input type="text" id="ci_x2" required></p>
+            <p>Sample Size 2 (\(n_2\)): <input type="text" id="ci_n2" required></p>
+        </div>
+        <div id="ciProportionsInput" style="display: none;">
+            <p>Sample Proportion 1 (\(p_1\)): <input type="text" id="ci_p1" required></p>
+            <p>Sample Size 1 (\(n_1\)): <input type="text" id="ci_n1_proportion" required></p>
+            <p>Sample Proportion 2 (\(p_2\)): <input type="text" id="ci_p2" required></p>
+            <p>Sample Size 2 (\(n_2\)): <input type="text" id="ci_n2_proportion" required></p>
+        </div>
         <p>Confidence Level (\(\%)\): <input type="text" id="ci_confidence_level" required></p>
         <button type="button" onclick="calculateConfidenceInterval()">Calculate Confidence Interval</button>
     </form>
@@ -189,42 +203,31 @@
         <p>Sample Proportion 1 (\(p_1\)): <input type="text" id="ss_p1" required></p>
         <p>Sample Proportion 2 (\(p_2\)): <input type="text" id="ss_p2" required></p>
         <p>Confidence Level (\(\%)\): <input type="text" id="ss_confidence_level" required></p>
-        <p>Margin of Error (\(\%)\): <input type="text" id="ss_margin_error" required></p>
-        <p><button type="button" onclick="calculateSampleSize()">Calculate Sample Size</button></p>
+        <p>Margin of Error: <input type="text" id="ss_margin_error" required></p>
+        <button type="button" onclick="calculateSampleSize()">Calculate Sample Sizes</button>
     </form>
 
-    <p id="sample_size_result"></p>
+    <p id="ss_result"></p>
 </section>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.4/jstat.min.js"></script>
-<script>
-    function toggleInputFields() {
-        var inputMethod = document.getElementById("inputMethod").value;
-        var successesInput = document.getElementById("successesInput");
-        var proportionsInput = document.getElementById("proportionsInput");
+</main>
 
-        if (inputMethod === "successes") {
-            successesInput.style.display = "block";
-            proportionsInput.style.display = "none";
-        } else {
-            successesInput.style.display = "none";
-            proportionsInput.style.display = "block";
-        }
-    }
+<footer>
+    <p>&copy; 2024 Asma S. Alayeb</p>
+</footer>
+
+<script>
+function toggleInputFields() {
+    const inputMethod = document.getElementById('inputMethod').value;
+    document.getElementById('successesInput').style.display = inputMethod === 'successes' ? 'block' : 'none';
+    document.getElementById('proportionsInput').style.display = inputMethod === 'proportions' ? 'block' : 'none';
 }
 
-    function toggleCIInputFields() {
-        const inputMethod = document.getElementById("ciInputMethod").value;
-        const ciSuccessesInput = document.getElementById("ciSuccessesInput");
-        const ciProportionsInput = document.getElementById("ciProportionsInput");
-        
-        if (inputMethod === "successes") {
-            ciSuccessesInput.style.display = "block";
-            ciProportionsInput.style.display = "none";
-        } else {
-            ciSuccessesInput.style.display = "none";
-            ciProportionsInput.style.display = "block";
-        }
+function toggleCIInputFields() {
+    const ciInputMethod = document.getElementById('ciInputMethod').value;
+    document.getElementById('ciSuccessesInput').style.display = ciInputMethod === 'successes' ? 'block' : 'none';
+    document.getElementById('ciProportionsInput').style.display = ciInputMethod === 'proportions' ? 'block' : 'none';
+}
     }
     function performTwoProportionTest() {
         var inputMethod = document.getElementById("inputMethod").value;
