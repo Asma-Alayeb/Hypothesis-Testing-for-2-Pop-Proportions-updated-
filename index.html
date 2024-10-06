@@ -212,7 +212,18 @@
 
     <p id="sample_size_result"></p>
 </section>
+<section id="sampleSizeCalculator" class="calculator">
+    <h2>Sample Size Calculator</h2>
+    <form id="sampleSizeForm">
+        <p>Sample Proportion 1 (\(p_1\)): <input type="text" id="ss_p1" required></p>
+        <p>Sample Proportion 2 (\(p_2\)): <input type="text" id="ss_p2" required></p>
+        <p>Confidence Level (\(\%)\): <input type="text" id="ss_confidence_level" required></p>
+        <p>Margin of Error (\(\%)\): <input type="text" id="ss_margin_error" required></p>
+        <p><button type="button" onclick="calculateSampleSize()">Calculate Sample Size</button></p>
+    </form>
 
+    <p id="sample_size_result"></p>
+</section>
 </main>
 
 <footer>
@@ -369,6 +380,26 @@ if (typeof p2 === "number" && !isNaN(p2) && p2 !== null) {
     }
 
     function calculateSampleSize() {
+        var p1 = parseFloat(document.getElementById("ss_p1").value);
+        var p2 = parseFloat(document.getElementById("ss_p2").value);
+
+        var confidenceLevel = parseFloat(document.getElementById("ss_confidence_level").value);
+        var marginError = parseFloat(document.getElementById("ss_margin_error").value) / 100; // Convert to proportion
+
+        if (isNaN(p1) || isNaN(p2) || isNaN(confidenceLevel) || isNaN(marginError) || confidenceLevel <= 0 || confidenceLevel >= 100 || marginError <= 0) {
+            alert("Please ensure all inputs are valid numbers.");
+            return;
+        }
+
+        var alpha = 1 - confidenceLevel / 100;
+
+        var zCritical = jStat.normal.inv(1 - alpha / 2, 0, 1);
+
+        var sampleSize = (p1 * (1 - p1) + p2 * (1 - p2)) * Math.pow(zCritical, 2) / Math.pow(marginError, 2);
+
+        document.getElementById("sample_size_result").innerHTML = "Required Sample Size per Group: " + Math.ceil(sampleSize);
+    }
+     function calculateSampleSize() {
         var p1 = parseFloat(document.getElementById("ss_p1").value);
         var p2 = parseFloat(document.getElementById("ss_p2").value);
 
